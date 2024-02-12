@@ -1,4 +1,4 @@
-# invoice-js
+# Invoice.js
 Generate Invoices as PDF using Javascript. Super easy code, open source.
 It uses pdfkit to generate the invoice, and md5 hashing to combine similar products on the invoice itself.
 I wanted to publish this as I was not happy with other invoicing tools on github for javascript.

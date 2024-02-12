@@ -4,6 +4,10 @@ It uses pdfkit to generate the invoice, and md5 hashing to combine similar produ
 I wanted to publish this as I was not happy with other invoicing tools on github for javascript.
 It is open source. If you contribute to the code, please reach out and give me the improvements, I will incorporate all improvements.
 
+<center>
+  <img src="./example-invoice.png" alt="Screenshot of example invoice PDF" width="420">
+</center>
+
 ## Installation & Dependencies
 It should be fairly easy to install:
 1) Install 2 dependencies

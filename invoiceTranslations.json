@@ -1,0 +1,42 @@
+{
+    "de": {
+        "NetEqualsGrossText": "Vielen Dank für Ihr Vertrauen. Diese Rechnung ist Umsatzsteuer befreit.<br> Bitte um Überweisung innerhalb von 15 Tagen.",
+        "DefaultFooterText": "Vielen Dank für Ihr Vertrauen.",
+        "Invoice": "Rechnung",
+        "BalanceDue": "Zu zahlen",
+        "SubTotal": "Subtotal",
+        "InvoiceNr": "Rechnungsnummer",
+        "InvoiceDate": "Datum",
+        "Item": "Leistung",
+        "UnitCost": "Einheitskosten",
+        "Quantitiy": "Menge",
+        "Total": "Gesamt",
+        "Net": "Netto",
+        "Gross": "Brutto",
+        "PaidToDate": "Bezahlt",
+        "NetSum": "Summe Netto",
+        "GrossSum": "Gross sum",
+        "Sum": "Summe",
+        "VatId": "UID"
+    },
+    "en": {
+        "NetEqualsGrossText": "This invoice does not include vat",
+        "DefaultFooterText": "Thank you for your trust.",
+        "Invoice": "Invoice",
+        "BalanceDue": "Balance Due",
+        "SubTotal": "Subtotal",
+        "InvoiceNr": "Invoice Number",
+        "InvoiceDate": "Invoice Date",
+        "Item": "Item",
+        "UnitCost": "Unit cost",
+        "Quantitiy": "Quantity",
+        "Total": "Total",
+        "Net": "Net",
+        "Gross": "Gross",
+        "PaidToDate": "Paid to date",
+        "NetSum": "Net sum",
+        "GrossSum": "Gross sum",
+        "Sum": "Sum",
+        "VatId": "Vat ID"
+    }
+}

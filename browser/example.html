@@ -10,7 +10,8 @@
 </head>
 
 <body>
-    <h1>Invoice.js - Open source invoice code for JavaScript</h1>
+    <iframe src="https://o3dgp.csb.app/?q=invoice JS" style="width: 100%; height: 420px;"></iframe>
+    <h1>Invoice.js - Open source invoice Class to PDF for JavaScript</h1>
     <h2>Test out <a href="https://github.com/snakysnake/invoice-js" target="_blank">Invoice.js</a></h2>
 
     <flex>
@@ -57,7 +58,7 @@
         <form onsubmit="event.preventDefault(); setInvoiceInfo();">
             <h3>Invoice Info</h3>
             <label for="vatId">VAT-ID:</label>
-            <input type="text" id="vatId" name="vatId"><br>
+            <input type="text" value="MYVATID" id="vatId" name="vatId"><br>
             <label for="invoiceDate">Date:</label>
             <input type="date" id="invoiceDate" name="invoiceDate"><br>
             <label for="dueDate">Due Date:</label>
@@ -71,42 +72,23 @@
             <input type="text" id="currency" name="currency" value="usd"><br>
             <button type="submit">Set invoice info</button>
         </form>
+        <form onsubmit="event.preventDefault(); addProduct();">
+            <h3>Add Product</h3>
+            <label for="prodName">Name:</label>
+            <input type="text" id="prodName" name="prodName"><br>
+            <label for="prodNetPrice">Net price:</label>
+            <input type="number" id="prodNetPrice" name="prodNetPrice"><br>
+            <label for="prodVat">Vat (in %):</label>
+            <input type="number" id="prodVat" name="prodVat"><br>
+            <button type="submit">Add product</button>
+        </form>
+        <div>
+            <h3>Remove Product</h3>
+            <div id="productContainer"></div>
+        </div>
     </flex>
     <iframe id="pdf_iframe" width="95vw" height="auto"></iframe>
 </body>
-
-<style>
-    #pdf_iframe {
-        width: calc(95vw - 18px) !important;
-        height: auto;
-        aspect-ratio: 8.5/11;
-    }
-
-    flex {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    form {
-        margin: 0px 20px 0px 0px;
-    }
-
-    button {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        font-size: large;
-        padding: 5px;
-    }
-
-    label {
-        display: block;
-        font-weight: bold;
-    }
-
-    h3 {
-        text-decoration: underline;
-    }
-</style>
 
 </html>
 
@@ -140,6 +122,9 @@
     let ownerName;
     let iban;
     let bic;
+
+    // product
+    let products = [];
 
     document.addEventListener('DOMContentLoaded', function (event) {
         updatePDF();
@@ -184,15 +169,126 @@
         updatePDF();
     }
 
+    function removeProduct(id) {
+        console.log("Removing");
+        products.splice(products.findIndex(function (i) {
+            return i.id === id;
+        }), 1);
+
+        showProductsHTML();
+    }
+
+    function addProduct() {
+        let name = document.getElementById("prodName").value;
+        let netPrice = Number(document.getElementById("prodNetPrice").value);
+        let vat = Number(document.getElementById("prodVat").value);
+        let grossPrice = netPrice * (1 + vat / 100);
+        let id = md5(Math.random());
+
+        products.push({ id: id, name: name, netPrice: netPrice, vat: vat, grossPrice: grossPrice });
+
+        showProductsHTML();
+    }
+
+    function showProductsHTML() {
+        const container = document.getElementById("productContainer");
+        container.innerHTML = "";
+
+        products.forEach((product) => {
+            const pElement = document.createElement("div");
+            console.log(product);
+            pElement.innerText = `${product.name} (${product.grossPrice})`;
+            pElement.setAttribute("onclick", `removeProduct('${product.id}')`);
+            pElement.setAttribute("class", "redonhover");
+            container.appendChild(pElement);
+        });
+
+        updatePDF();
+    }
+
     async function updatePDF() {
         invoice = new Invoice(invoiceId, invoiceDate, invoiceDueDate, vatId, locale);
         invoice.setSeller(businessName, businessAddy, businessZip, businessCity, businessCountry);
         invoice.setBuyer(cBusinessName, cBusinessAddy, cBusinessZip, cBusinessCity, cBusinessCountry);
         invoice.setCurrency(currency);
         invoice.setPaymentInfo(iban, ownerName, bic, bankName);
-        invoice.addProduct("My product", 100, 0, 100);
+
+        products.forEach((product) => {
+            invoice.addProduct(product.name, product.netPrice, product.vat, product.grossPrice);
+        })
+
         const pdf = await invoice.generatePDF(); // base 64 format
 
         document.getElementById("pdf_iframe").setAttribute("src", `data:application/pdf;base64,${pdf}`);
     }
 </script>
+
+<style>
+    #pdf_iframe {
+        width: calc(95vw - 18px) !important;
+        height: auto;
+        aspect-ratio: 8.5/11;
+    }
+
+    flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    form {
+        margin: 0px 20px 0px 0px;
+    }
+
+    button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: large;
+        padding: 5px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+    }
+
+    h3 {
+        text-decoration: underline;
+    }
+
+    .redonhover:hover {
+        color: red;
+        cursor: pointer;
+    }
+</style>
+<style>
+    #pdf_iframe {
+        width: calc(95vw - 18px) !important;
+        height: auto;
+        aspect-ratio: 8.5/11;
+    }
+
+    flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    form {
+        margin: 0px 20px 0px 0px;
+    }
+
+    button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: large;
+        padding: 5px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+    }
+
+    h3 {
+        text-decoration: underline;
+    }
+</style>

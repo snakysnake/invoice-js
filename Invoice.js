@@ -80,7 +80,7 @@ const Invoice = class {
         if (!this.locale) {
             throw new Error("No locale is set for translations");
         }
-        const location = path.resolve('src/Classes/invoiceTranslations.json');
+        const location = path.resolve('json/invoiceTranslations.json');
         const translations = JSON.parse(readFileSync(location));
 
         // todo: lookup in file by key, throw error if it fails
@@ -102,7 +102,7 @@ const Invoice = class {
      */
     setCurrency(currency) {
         currency = currency.toUpperCase();
-        const location = path.resolve('src/Classes/commonCurrencies.json');
+        const location = path.resolve('json/commonCurrencies.json');
         const commonCurrenices = JSON.parse(readFileSync(location));
 
         this.#currency = commonCurrenices[currency];

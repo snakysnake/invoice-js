@@ -5,7 +5,7 @@ I wanted to publish this as I was not happy with other invoicing tools on github
 It is open source. If you contribute to the code, please reach out and give me the improvements, I will incorporate all improvements.
 
 <center>
-  <img src="./example-invoice.png" alt="Screenshot of example invoice PDF" width="420">
+  <img src="./docs/example-invoice.png" alt="Screenshot of example invoice PDF" width="420">
 </center>
 
 ## Installation & Dependencies

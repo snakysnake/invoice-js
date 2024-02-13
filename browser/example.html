@@ -1,0 +1,198 @@
+<html lang="en">
+
+<head>
+    <!--Please make sure to use the latest and greatest version of each project! -->
+    <!--I just downloaded these for extra reliabilty: https://codepen.io/blikblum/pen/gJNWMg -->
+    <script src="./standalone_dependencies/pdfkit.standalone.js"></script>
+    <script src="./standalone_dependencies/blob-stream.js"></script>
+    <script src="./standalone_dependencies/md5.js"></script>
+    <script src="./Invoice.js"></script>
+</head>
+
+<body>
+    <h1>Invoice.js - Open source invoice code for JavaScript</h1>
+    <h2>Test out <a href="https://github.com/snakysnake/invoice-js" target="_blank">Invoice.js</a></h2>
+
+    <flex>
+        <form onsubmit="event.preventDefault(); setSeller();">
+            <h3>Business Info</h3>
+            <label for="sellerBusiness">Name:</label>
+            <input type="text" id="sellerBusiness" name="sellerBusiness"><br>
+            <label for="sellerAddy">Address:</label>
+            <input type="text" id="sellerAddy" name="sellerAddy"><br>
+            <label for="sellerZip">Zip:</label>
+            <input type="text" id="sellerZip" name="sellerZip"><br>
+            <label for="sellerCity">City:</label>
+            <input type="text" id="sellerCity" name="sellerCity"><br>
+            <label for="sellerCountry">Country:</label>
+            <input type="text" id="sellerCountry" name="sellerCountry"><br>
+            <button type="submit">Set business info</button>
+        </form>
+        <form onsubmit="event.preventDefault(); setBuyer();">
+            <h3>Client Info</h3>
+            <label for="buyerBusiness">Name:</label>
+            <input type="text" id="buyerBusiness" name="buyerBusiness"><br>
+            <label for="buyerAddy">Address:</label>
+            <input type="text" id="buyerAddy" name="buyerAddy"><br>
+            <label for="buyerZip">Zip:</label>
+            <input type="text" id="buyerZip" name="buyerZip"><br>
+            <label for="buyerCity">City:</label>
+            <input type="text" id="buyerCity" name="buyerCity"><br>
+            <label for="buyerCountry">Country:</label>
+            <input type="text" id="buyerCountry" name="buyerCountry"><br>
+            <button type="submit">Set client info</button>
+        </form>
+        <form onsubmit="event.preventDefault(); setPaymentInfo();">
+            <h3>Payment Info</h3>
+            <label for="paymentName">Name:</label>
+            <input type="text" id="paymentName" name="paymentName"><br>
+            <label for="bankName">Bank Name:</label>
+            <input type="text" id="bankName" name="bankName"><br>
+            <label for="iban">IBAN:</label>
+            <input type="text" id="iban" name="iban"><br>
+            <label for="bic">BIC:</label>
+            <input type="text" id="bic" name="bic"><br>
+            <button type="submit">Set payment info</button>
+        </form>
+        <form onsubmit="event.preventDefault(); setInvoiceInfo();">
+            <h3>Invoice Info</h3>
+            <label for="vatId">VAT-ID:</label>
+            <input type="text" id="vatId" name="vatId"><br>
+            <label for="invoiceDate">Date:</label>
+            <input type="date" id="invoiceDate" name="invoiceDate"><br>
+            <label for="dueDate">Due Date:</label>
+            <input type="date" id="dueDate" name="dueDate"><br>
+            <label for="lang">Language:</label>
+            <select name="lang" id="lang">
+                <option value="de">German</option>
+                <option value="en">English</option>
+            </select><br>
+            <label for="currency">Currency:</label>
+            <input type="text" id="currency" name="currency" value="usd"><br>
+            <button type="submit">Set invoice info</button>
+        </form>
+    </flex>
+    <iframe id="pdf_iframe" width="95vw" height="auto"></iframe>
+</body>
+
+<style>
+    #pdf_iframe {
+        width: calc(95vw - 18px) !important;
+        height: auto;
+        aspect-ratio: 8.5/11;
+    }
+
+    flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    form {
+        margin: 0px 20px 0px 0px;
+    }
+
+    button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: large;
+        padding: 5px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+    }
+
+    h3 {
+        text-decoration: underline;
+    }
+</style>
+
+</html>
+
+<script>
+    let invoice;
+
+    // my business
+    let businessName = "My Business";
+    let businessAddy = "Mainstreet 1";
+    let businessZip = "1010";
+    let businessCity = "Vienna";
+    let businessCountry = "Austria";
+
+    // client business
+    let cBusinessName = "Client Business";
+    let cBusinessAddy = "Offroad 1";
+    let cBusinessZip = "1220";
+    let cBusinessCity = "Vienna";
+    let cBusinessCountry = "Austria";
+
+    // invoice info
+    let invoiceId = "TestInvoiceNr1"
+    let invoiceDate = new Date();
+    let invoiceDueDate = new Date();
+    let vatId = "MYVATID";
+    let locale = "en";
+    let currency = "usd";
+
+    // payment info
+    let bankName;
+    let ownerName;
+    let iban;
+    let bic;
+
+    document.addEventListener('DOMContentLoaded', function (event) {
+        updatePDF();
+    });
+
+    function setSeller() {
+        businessName = document.getElementById("sellerBusiness").value;
+        businessAddy = document.getElementById("sellerAddy").value;
+        businessZip = document.getElementById("sellerZip").value;
+        businessCity = document.getElementById("sellerCity").value;
+        businessCountry = document.getElementById("sellerCountry").value;
+
+        updatePDF();
+    }
+
+    function setBuyer() {
+        businessName = document.getElementById("buyerBusiness").value;
+        businessAddy = document.getElementById("buyerAddy").value;
+        businessZip = document.getElementById("buyerZip").value;
+        businessCity = document.getElementById("buyerCity").value;
+        businessCountry = document.getElementById("buyerCountry").value;
+
+        updatePDF();
+    }
+
+    function setPaymentInfo() {
+        ownerName = document.getElementById("paymentName").value;
+        bankName = document.getElementById("bankName").value;
+        iban = document.getElementById("iban").value;
+        bic = document.getElementById("bic").value;
+
+        updatePDF();
+    }
+
+    function setInvoiceInfo() {
+        vatId = document.getElementById("vatId").value;
+        invoiceDate = new Date(document.getElementById("invoiceDate").value);
+        invoiceDueDate = new Date(document.getElementById("dueDate").value);
+        locale = document.getElementById("lang").value;
+        currency = document.getElementById("currency").value;
+
+        updatePDF();
+    }
+
+    async function updatePDF() {
+        invoice = new Invoice(invoiceId, invoiceDate, invoiceDueDate, vatId, locale);
+        invoice.setSeller(businessName, businessAddy, businessZip, businessCity, businessCountry);
+        invoice.setBuyer(cBusinessName, cBusinessAddy, cBusinessZip, cBusinessCity, cBusinessCountry);
+        invoice.setCurrency(currency);
+        invoice.setPaymentInfo(iban, ownerName, bic, bankName);
+        invoice.addProduct("My product", 100, 0, 100);
+        const pdf = await invoice.generatePDF(); // base 64 format
+
+        document.getElementById("pdf_iframe").setAttribute("src", `data:application/pdf;base64,${pdf}`);
+    }
+</script>

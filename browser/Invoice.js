@@ -1285,7 +1285,18 @@ class Invoice {
 
         this.#grossSum += grossPrice;
         this.#netSum += netPrice;
+    }
 
+    /**
+     * Run checks before generating pdf
+     */
+    #runChecks() {
+        if (!this.#netEqualsGross && !this.vatId) {
+            throw new Error("This invoice contains VAT, please include a valid VatID!");
+        }
+    }
+
+    #filterProducts() {
         // categorize products
         this.#products.forEach((product) => {
             let quantity = 0;
@@ -1305,14 +1316,6 @@ class Invoice {
         );
     }
 
-    /**
-     * Run checks before generating pdf
-     */
-    #runChecks() {
-        if (!this.#netEqualsGross && !this.vatId) {
-            throw new Error("This invoice contains VAT, please include a valid VatID!");
-        }
-    }
 
     /**
      * Generate PDF.
@@ -1321,6 +1324,7 @@ class Invoice {
      */
     async generatePDF() {
         this.#runChecks();
+        this.#filterProducts();
 
         let doc = new PDFDocument({ size: "A4", margin: 50, compress: false });
 

@@ -171,7 +171,19 @@ const Invoice = class {
 
         this.#grossSum += grossPrice;
         this.#netSum += netPrice;
+    }
 
+    /**
+     * Run checks before generating pdf
+     */
+    #runChecks() {
+        if (!this.#netEqualsGross && !this.vatId) {
+            throw new Error("This invoice contains VAT, please include a valid VatID!");
+        }
+    }
+
+
+    #filterProducts() {
         // categorize products
         this.#products.forEach((product) => {
             let quantity = 0;
@@ -192,21 +204,13 @@ const Invoice = class {
     }
 
     /**
-     * Run checks before generating pdf
-     */
-    #runChecks() {
-        if (!this.#netEqualsGross && !this.vatId) {
-            throw new Error("This invoice contains VAT, please include a valid VatID!");
-        }
-    }
-
-    /**
      * Generate PDF.
      * Call this function in the end of the object's lifecycle.
      * @returns {String} Invoice as Base64 String
      */
     async generatePDF() {
         this.#runChecks();
+        this.#filterProducts();
 
         let doc = new PDFDocument({ size: "A4", margin: 50, compress: false });
 

@@ -4,6 +4,10 @@
  * Meant for the demo only, I don't have any other use for this right now.
  * If you wanna do something cool and flex in your CV, contribute to this project by:
  * Removing the big json s***  and fetching the data differently, without 1k+ lines of inline json
+ * 
+ * Update:
+ * This file is currently out of date, use the other invoice.js file and copy over the two mising functions :)
+ * sorry rn its only like 0-1 people using this :D
  */
 
 class Invoice {

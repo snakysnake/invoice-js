@@ -117,7 +117,7 @@ const Invoice = class {
      * @param {String} text Text to add to footer 
      */
     setFooter(text) {
-        if (this.#netEqualsGross) {
+        if (this.#netEqualsGross === true) {
             this.#footerText = this.#translate('NetEqualsGrossText');
         }
         else {
@@ -135,6 +135,9 @@ const Invoice = class {
      * @param {String} bankName Name of bank
      */
     setPaymentInfo(iban, name, bic, bankName, addToFooter = true) {
+        if (this.#products.length === 0) {
+            throw new Error("Please add products before setting PaymentInfo");
+        }
         this.#iban = iban;
         this.#accountName = name;
         this.#bic = bic;
@@ -154,6 +157,7 @@ const Invoice = class {
      * @param {Number} grossPrice Gross price of product
      */
     addProduct(title, netPrice, vat, grossPrice) {
+        vat = Number(vat);
         if (vat > 0 && this.#netEqualsGross) {
             this.#netEqualsGross = false; // it is set to true, and potentially changes value to false once in a lifetime :P
         }
@@ -182,7 +186,6 @@ const Invoice = class {
         }
     }
 
-
     #filterProducts() {
         // categorize products
         this.#products.forEach((product) => {
@@ -208,7 +211,7 @@ const Invoice = class {
      * Call this function in the end of the object's lifecycle.
      * @returns {String} Invoice as Base64 String
      */
-    async generatePDF() {
+    generatePDF() {
         this.#runChecks();
         this.#filterProducts();
 
@@ -318,8 +321,8 @@ const Invoice = class {
                 doc,
                 position,
                 product.quantity + "x " + product.description,
-                this.formatCurrency(product.netPrice / product.quantity),
-                this.formatCurrency(product.grossPrice)
+                this.formatCurrency(product.netPrice * product.quantity),
+                this.formatCurrency(product.grossPrice * product.quantity)
             );
 
             this.#generateHr(doc, position + 20);

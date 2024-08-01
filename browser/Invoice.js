@@ -10,7 +10,7 @@
  * sorry rn its only like 0-1 people using this :D
  */
 
-const Invoice = class {
+Invoice = class {
     #netEqualsGross = true;
     #products = [];
     #footerText = "";
@@ -1324,7 +1324,7 @@ const Invoice = class {
         );
     }
 
-    
+
     /**
      * Generate PDF.
      * Call this function in the end of the object's lifecycle.
@@ -1529,5 +1529,3 @@ const Invoice = class {
     }
 
 }
-
-export default Invoice

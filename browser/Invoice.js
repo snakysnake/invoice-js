@@ -10,7 +10,7 @@
  * sorry rn its only like 0-1 people using this :D
  */
 
-class Invoice {
+const Invoice = class {
     #netEqualsGross = true;
     #products = [];
     #footerText = "";
@@ -1235,7 +1235,7 @@ class Invoice {
      * @param {String} text Text to add to footer 
      */
     setFooter(text) {
-        if (this.#netEqualsGross) {
+        if (this.#netEqualsGross === true) {
             this.#footerText = this.#translate('NetEqualsGrossText');
         }
         else {
@@ -1253,6 +1253,9 @@ class Invoice {
      * @param {String} bankName Name of bank
      */
     setPaymentInfo(iban, name, bic, bankName, addToFooter = true) {
+        if (this.#products.length === 0) {
+            throw new Error("Please add products before setting PaymentInfo");
+        }
         this.#iban = iban;
         this.#accountName = name;
         this.#bic = bic;
@@ -1272,6 +1275,7 @@ class Invoice {
      * @param {Number} grossPrice Gross price of product
      */
     addProduct(title, netPrice, vat, grossPrice) {
+        vat = Number(vat);
         if (vat > 0 && this.#netEqualsGross) {
             this.#netEqualsGross = false; // it is set to true, and potentially changes value to false once in a lifetime :P
         }
@@ -1320,13 +1324,13 @@ class Invoice {
         );
     }
 
-
+    
     /**
      * Generate PDF.
      * Call this function in the end of the object's lifecycle.
      * @returns {String} Invoice as Base64 String
      */
-    async generatePDF() {
+    generatePDF() {
         this.#runChecks();
         this.#filterProducts();
 
@@ -1436,8 +1440,8 @@ class Invoice {
                 doc,
                 position,
                 product.quantity + "x " + product.description,
-                this.formatCurrency(product.netPrice / product.quantity),
-                this.formatCurrency(product.grossPrice)
+                this.formatCurrency(product.netPrice * product.quantity),
+                this.formatCurrency(product.grossPrice * product.quantity)
             );
 
             this.#generateHr(doc, position + 20);
@@ -1525,3 +1529,5 @@ class Invoice {
     }
 
 }
+
+export default Invoice

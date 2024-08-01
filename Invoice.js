@@ -3,6 +3,9 @@ import * as path from 'path';
 import PDFDocument from "pdfkit";
 import { readFileSync } from "fs";
 
+// set location for translations
+const txLocation = path.resolve('json/invoiceTranslations.json');
+
 
 const Invoice = class {
     #netEqualsGross = true;
@@ -80,7 +83,7 @@ const Invoice = class {
         if (!this.locale) {
             throw new Error("No locale is set for translations");
         }
-        const location = path.resolve('json/invoiceTranslations.json');
+        const location = path.resolve(txLocation); // see top of file
         const translations = JSON.parse(readFileSync(location));
 
         // todo: lookup in file by key, throw error if it fails
@@ -102,7 +105,7 @@ const Invoice = class {
      */
     setCurrency(currency) {
         currency = currency.toUpperCase();
-        const location = path.resolve('json/commonCurrencies.json');
+        const location = path.resolve(txLocation); // see top of file
         const commonCurrenices = JSON.parse(readFileSync(location));
 
         this.#currency = commonCurrenices[currency];

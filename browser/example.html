@@ -122,8 +122,16 @@
     let iban;
     let bic;
 
-    // product
-    let products = [];
+    // product (example)
+    let products = [
+        {
+            id: md5("Invoice.JS"),
+            name: "Invoice.JS",
+            netPrice: 0,
+            vat: 0,
+            grossPrice: 0
+        }
+    ];
 
     document.addEventListener('DOMContentLoaded', function (event) {
         updatePDF();
@@ -210,11 +218,12 @@
         invoice.setSeller(businessName, businessAddy, businessZip, businessCity, businessCountry);
         invoice.setBuyer(cBusinessName, cBusinessAddy, cBusinessZip, cBusinessCity, cBusinessCountry);
         invoice.setCurrency(currency);
-        invoice.setPaymentInfo(iban, ownerName, bic, bankName);
 
         products.forEach((product) => {
             invoice.addProduct(product.name, product.netPrice, product.vat, product.grossPrice);
-        })
+        });
+
+        invoice.setPaymentInfo(iban, ownerName, bic, bankName);
 
         const pdf = await invoice.generatePDF(); // base 64 format
 

@@ -10,79 +10,93 @@
 </head>
 
 <body>
-    <h1>Invoice.js - Open source invoice Class to PDF for JavaScript</h1>
-    <h2>Test out <a href="https://github.com/snakysnake/invoice-js" target="_blank">Invoice.js</a></h2>
+    <h1>Test out <a href="https://github.com/snakysnake/invoice-js" target="_blank">Invoice.js</a></h1>
+    <h2>Invoice.js - Open source invoice Class to PDF for JavaScript</h2>
 
     <flex>
         <form onsubmit="event.preventDefault(); setSeller();">
-            <h3>Business Info</h3>
-            <label for="sellerBusiness">Name:</label>
-            <input type="text" id="sellerBusiness" name="sellerBusiness"><br>
-            <label for="sellerAddy">Address:</label>
-            <input type="text" id="sellerAddy" name="sellerAddy"><br>
-            <label for="sellerZip">Zip:</label>
-            <input type="text" id="sellerZip" name="sellerZip"><br>
-            <label for="sellerCity">City:</label>
-            <input type="text" id="sellerCity" name="sellerCity"><br>
-            <label for="sellerCountry">Country:</label>
-            <input type="text" id="sellerCountry" name="sellerCountry"><br>
-            <button type="submit">Set business info</button>
+            <h3>Set your business info</h3>
+            <div class="formRow">
+
+                <label for="sellerBusiness">Name:</label>
+                <input type="text" id="sellerBusiness" name="sellerBusiness">
+                <label for="sellerAddy">Address:</label>
+                <input type="text" id="sellerAddy" name="sellerAddy">
+                <label for="sellerZip">Zip:</label>
+                <input type="text" id="sellerZip" name="sellerZip">
+                <label for="sellerCity">City:</label>
+                <input type="text" id="sellerCity" name="sellerCity">
+                <label for="sellerCountry">Country:</label>
+                <input type="text" id="sellerCountry" name="sellerCountry">
+            </div>
+                <button type="submit">Set business info</button>
         </form>
         <form onsubmit="event.preventDefault(); setBuyer();">
             <h3>Client Info</h3>
+            <div class="formRow">
             <label for="buyerBusiness">Name:</label>
-            <input type="text" id="buyerBusiness" name="buyerBusiness"><br>
+            <input type="text" id="buyerBusiness" name="buyerBusiness">
             <label for="buyerAddy">Address:</label>
-            <input type="text" id="buyerAddy" name="buyerAddy"><br>
+            <input type="text" id="buyerAddy" name="buyerAddy">
             <label for="buyerZip">Zip:</label>
-            <input type="text" id="buyerZip" name="buyerZip"><br>
+            <input type="text" id="buyerZip" name="buyerZip">
             <label for="buyerCity">City:</label>
-            <input type="text" id="buyerCity" name="buyerCity"><br>
+            <input type="text" id="buyerCity" name="buyerCity">
             <label for="buyerCountry">Country:</label>
-            <input type="text" id="buyerCountry" name="buyerCountry"><br>
+            <input type="text" id="buyerCountry" name="buyerCountry">
+            </div>
             <button type="submit">Set client info</button>
         </form>
         <form onsubmit="event.preventDefault(); setPaymentInfo();">
             <h3>Payment Info</h3>
+            <div class="formRow">
             <label for="paymentName">Name:</label>
-            <input type="text" id="paymentName" name="paymentName"><br>
+            <input type="text" id="paymentName" name="paymentName">
             <label for="bankName">Bank Name:</label>
-            <input type="text" id="bankName" name="bankName"><br>
+            <input type="text" id="bankName" name="bankName">
             <label for="iban">IBAN:</label>
-            <input type="text" id="iban" name="iban"><br>
+            <input type="text" id="iban" name="iban">
             <label for="bic">BIC:</label>
-            <input type="text" id="bic" name="bic"><br>
+            <input type="text" id="bic" name="bic">
+        </div>
             <button type="submit">Set payment info</button>
         </form>
         <form onsubmit="event.preventDefault(); setInvoiceInfo();">
             <h3>Invoice Info</h3>
+            <div class="formRow">
+            
             <label for="vatId">VAT-ID:</label>
-            <input type="text" value="MYVATID" id="vatId" name="vatId"><br>
+            <input type="text" value="MYVATID" id="vatId" name="vatId">
             <label for="invoiceDate">Date:</label>
-            <input type="date" id="invoiceDate" name="invoiceDate"><br>
+            <input type="date" id="invoiceDate" name="invoiceDate">
             <label for="dueDate">Due Date:</label>
-            <input type="date" id="dueDate" name="dueDate"><br>
+            <input type="date" id="dueDate" name="dueDate">
             <label for="lang">Language:</label>
             <select name="lang" id="lang">
                 <option value="de">German</option>
                 <option value="en">English</option>
-            </select><br>
+            </select>
             <label for="currency">Currency:</label>
-            <input type="text" id="currency" name="currency" value="usd"><br>
+            <input type="text" id="currency" name="currency" value="usd">
+            </div>
             <button type="submit">Set invoice info</button>
         </form>
         <form onsubmit="event.preventDefault(); addProduct();">
             <h3>Add Product</h3>
+            <div class="formRow">
+
             <label for="prodName">Name:</label>
-            <input type="text" id="prodName" name="prodName"><br>
+            <input type="text" id="prodName" name="prodName">
             <label for="prodNetPrice">Net price:</label>
-            <input type="number" id="prodNetPrice" name="prodNetPrice"><br>
+            <input type="number" id="prodNetPrice" name="prodNetPrice">
             <label for="prodVat">Vat (in %):</label>
-            <input type="number" id="prodVat" name="prodVat"><br>
+            <input type="number" id="prodVat" name="prodVat">
+            </div>
             <button type="submit">Add product</button>
         </form>
         <div>
-            <h3>Remove Product</h3>
+            <h3>View Products</h3>
+            <p>Click a product to remove it</p>
             <div id="productContainer"></div>
         </div>
     </flex>
@@ -232,6 +246,36 @@
 </script>
 
 <style>
+
+    #productContainer {
+        font-weight: 800;
+    }
+
+    .formRow {
+        display: flex;
+        flex-direction: row;
+
+        flex-wrap: wrap;
+    
+    }
+
+
+    .formRow > * {
+        margin: 1rem 1rem 1rem 0rem;
+    }
+    form {
+        background-color: #d1d5db;
+        padding: 0rem 2rem 0rem 2rem;
+        flex-wrap: wrap;
+        width: 80vw;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     #pdf_iframe {
         width: calc(95vw - 18px) !important;
         height: auto;
@@ -241,11 +285,11 @@
     flex {
         display: flex;
         flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
     }
 
-    form {
-        margin: 0px 20px 0px 0px;
-    }
+
 
     button {
         margin-top: 10px;
@@ -255,7 +299,6 @@
     }
 
     label {
-        display: block;
         font-weight: bold;
     }
 
@@ -266,37 +309,5 @@
     .redonhover:hover {
         color: red;
         cursor: pointer;
-    }
-</style>
-<style>
-    #pdf_iframe {
-        width: calc(95vw - 18px) !important;
-        height: auto;
-        aspect-ratio: 8.5/11;
-    }
-
-    flex {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    form {
-        margin: 0px 20px 0px 0px;
-    }
-
-    button {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        font-size: large;
-        padding: 5px;
-    }
-
-    label {
-        display: block;
-        font-weight: bold;
-    }
-
-    h3 {
-        text-decoration: underline;
     }
 </style>
